@@ -1,0 +1,99 @@
+<html>
+<head>
+<title>SunEarthMoon_Lab5.py</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #d55fde; font-style: italic;}
+.s1 { color: #bbbbbb;}
+.s2 { color: #d19a66;}
+.s3 { color: #5c6370; font-style: italic;}
+</style>
+</head>
+<body bgcolor="#282c34">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+SunEarthMoon_Lab5.py</font>
+</center></td></tr></table>
+<pre><span class="s0">from </span><span class="s1">vpython </span><span class="s0">import </span><span class="s1">*</span>
+
+<span class="s1">G = </span><span class="s2">6.67408e-11</span>
+
+
+<span class="s0">def </span><span class="s1">gravAcc(obj, otherObj):</span>
+    <span class="s1">rVector = obj.pos - otherObj.pos</span>
+    <span class="s1">acceleration = -((G * otherObj.mass) / mag2(rVector))</span>
+    <span class="s1">acceleration *= norm(rVector)</span>
+    <span class="s0">return </span><span class="s1">acceleration</span>
+
+
+<span class="s0">def </span><span class="s1">main1():</span>
+    <span class="s1">planetoidList = []</span>
+
+    <span class="s3"># mass</span>
+    <span class="s1">sunMass = </span><span class="s2">1.9891e30</span>
+    <span class="s1">earthMass = </span><span class="s2">5.972e24</span>
+    <span class="s1">moonMass = </span><span class="s2">7.348e22</span>
+
+    <span class="s3"># In km (Equatorial radius)</span>
+    <span class="s3"># earthRadius = 6378.137</span>
+    <span class="s3"># sunRadius = earthRadius * 109.2</span>
+    <span class="s3"># moonRadius = 0.2725 * earthRadius</span>
+    <span class="s1">earthRadius = </span><span class="s2">1e9</span>
+    <span class="s1">sunRadius = </span><span class="s2">5e10</span>
+    <span class="s1">moonRadius = </span><span class="s2">1000</span>
+
+    <span class="s3"># in km</span>
+    <span class="s1">moonDistScale = </span><span class="s2">10000</span>
+    <span class="s1">earthDistFromSun = </span><span class="s2">1.495e11</span>
+    <span class="s1">moonDistFromEarth = </span><span class="s2">3.848e8</span>
+
+    <span class="s1">sun = sphere(pos=vector(</span><span class="s2">0</span><span class="s1">, </span><span class="s2">0</span><span class="s1">, </span><span class="s2">0</span><span class="s1">), radius=sunRadius, color=color.orange)</span>
+    <span class="s1">earth = sphere(pos=vector(earthDistFromSun, </span><span class="s2">0</span><span class="s1">, </span><span class="s2">0</span><span class="s1">), radius=earthRadius, color=color.green, make_trail=</span><span class="s0">True</span><span class="s1">)</span>
+    <span class="s1">moon = sphere(pos=vector(earthDistFromSun + moonDistFromEarth, </span><span class="s2">0</span><span class="s1">, </span><span class="s2">0</span><span class="s1">), radius=moonRadius,</span>
+                  <span class="s1">color=color.blue, opacity=</span><span class="s2">0</span><span class="s1">)</span>
+    <span class="s1">bigMoon = sphere(pos=vector(earthDistFromSun + </span><span class="s2">50 </span><span class="s1">* moonDistFromEarth, </span><span class="s2">0</span><span class="s1">, </span><span class="s2">0</span><span class="s1">), radius=moonRadius * </span><span class="s2">1000</span><span class="s1">,</span>
+                     <span class="s1">color=color.blue, opacity=</span><span class="s2">1</span><span class="s1">, make_trail=</span><span class="s0">True</span><span class="s1">)</span>
+
+    <span class="s1">scene.camera.follow(sun)</span>
+
+    <span class="s1">sun.mass = sunMass</span>
+    <span class="s1">earth.mass = earthMass</span>
+    <span class="s1">moon.mass = moonMass</span>
+
+    <span class="s3"># velocities</span>
+    <span class="s1">sun.velocity = vector(</span><span class="s2">0</span><span class="s1">, </span><span class="s2">0</span><span class="s1">, </span><span class="s2">0</span><span class="s1">)</span>
+    <span class="s1">earth.velocity = vector(</span><span class="s2">0</span><span class="s1">, </span><span class="s2">2.978e4</span><span class="s1">, </span><span class="s2">0</span><span class="s1">)</span>
+    <span class="s1">moon.velocity = vector(</span><span class="s2">0</span><span class="s1">, </span><span class="s2">1022</span><span class="s1">, </span><span class="s2">0</span><span class="s1">) + earth.velocity</span>
+
+    <span class="s1">planetoidList.append(sun)</span>
+    <span class="s1">planetoidList.append(earth)</span>
+    <span class="s1">planetoidList.append(moon)</span>
+
+    <span class="s3"># define initial time</span>
+    <span class="s1">t = </span><span class="s2">0</span>
+
+    <span class="s3"># define time interval</span>
+    <span class="s1">dt = </span><span class="s2">3600</span>
+
+    <span class="s0">while </span><span class="s1">t &lt; </span><span class="s2">1e10</span><span class="s1">:</span>
+        <span class="s1">rate(</span><span class="s2">300</span><span class="s1">)</span>
+
+        <span class="s0">for </span><span class="s1">obj1 </span><span class="s0">in </span><span class="s1">planetoidList:</span>
+            <span class="s0">for </span><span class="s1">obj2 </span><span class="s0">in </span><span class="s1">planetoidList:</span>
+                <span class="s0">if </span><span class="s1">obj1 != obj2:</span>
+                    <span class="s1">obj1.velocity += gravAcc(obj1, obj2) * dt</span>
+
+        <span class="s0">for </span><span class="s1">obj </span><span class="s0">in </span><span class="s1">planetoidList:</span>
+            <span class="s1">obj.pos += obj.velocity * dt</span>
+
+        <span class="s1">r_me = earth.pos - moon.pos</span>
+        <span class="s1">bigMoon.pos = moon.pos + (</span><span class="s2">50 </span><span class="s1">* mag(r_me) * norm(r_me))</span>
+
+        <span class="s1">t = t + dt</span>
+
+
+<span class="s1">main1()</span>
+</pre>
+</body>
+</html>
