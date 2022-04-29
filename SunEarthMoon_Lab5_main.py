@@ -1,8 +1,10 @@
 # References
 # https://gist.github.com/CodeDotJS/64f0d3d86d05b93af3b6
 # https://pypi.org/project/solarsystem/
+# https://www.astropy.org/
 
 import solarsystem
+import astropy
 from vpython import *
 
 G = 6.67408e-11
